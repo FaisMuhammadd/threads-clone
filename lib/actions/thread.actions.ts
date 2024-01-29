@@ -6,7 +6,7 @@ import { connectToDB } from "../mongoose"
 
 import User from "../models/user.model"
 import Thread from "../models/thread.model"
-import Community from "./community.model"
+import Community from "../models/community.model"
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectToDB()
