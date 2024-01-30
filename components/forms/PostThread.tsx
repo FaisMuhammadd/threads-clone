@@ -71,7 +71,7 @@ function PostThread({ userId }: Props) {
           )}
         />
 
-        <Button type="submit" className="bg-primary-500">
+        <Button type="submit" className="bg-primary-500 text-light-2">
           Post Thread
         </Button>
       </form>
