@@ -1,6 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 
+import { formatDateString } from "@/lib/utils"
+import DeleteThread from "../forms/DeleteThread"
+
 interface Props {
   id: string
   currentUserId: string
@@ -15,7 +18,7 @@ interface Props {
     id: string
     name: string
     image: string
-  }
+  } | null
   createdAt: string
   comments: {
     author: {
@@ -25,7 +28,7 @@ interface Props {
   isComment?: boolean
 }
 
-const ThreadCard = ({
+function ThreadCard({
   id,
   currentUserId,
   parentId,
@@ -35,7 +38,7 @@ const ThreadCard = ({
   createdAt,
   comments,
   isComment,
-}: Props) => {
+}: Props) {
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -48,7 +51,7 @@ const ThreadCard = ({
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
               <Image
                 src={author.image}
-                alt="Profile image"
+                alt="user_community_image"
                 fill
                 className="cursor-pointer rounded-full"
               />
@@ -78,7 +81,7 @@ const ThreadCard = ({
                 <Link href={`/thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"
-                    alt="reply"
+                    alt="heart"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
@@ -86,14 +89,14 @@ const ThreadCard = ({
                 </Link>
                 <Image
                   src="/assets/repost.svg"
-                  alt="repost"
+                  alt="heart"
                   width={24}
                   height={24}
                   className="cursor-pointer object-contain"
                 />
                 <Image
                   src="/assets/share.svg"
-                  alt="share"
+                  alt="heart"
                   width={24}
                   height={24}
                   className="cursor-pointer object-contain"
@@ -103,14 +106,63 @@ const ThreadCard = ({
               {isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} replies
+                    {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                   </p>
                 </Link>
               )}
             </div>
           </div>
         </div>
+
+        <DeleteThread
+          threadId={JSON.stringify(id)}
+          currentUserId={currentUserId}
+          authorId={author.id}
+          parentId={parentId}
+          isComment={isComment}
+        />
       </div>
+
+      {!isComment && comments.length > 0 && (
+        <div className="ml-1 mt-3 flex items-center gap-2">
+          {comments.slice(0, 2).map((comment, index) => (
+            <Image
+              key={index}
+              src={comment.author.image}
+              alt={`user_${index}`}
+              width={24}
+              height={24}
+              className={`${index !== 0 && "-ml-5"} rounded-full object-cover`}
+            />
+          ))}
+
+          <Link href={`/thread/${id}`}>
+            <p className="mt-1 text-subtle-medium text-gray-1">
+              {comments.length} repl{comments.length > 1 ? "ies" : "y"}
+            </p>
+          </Link>
+        </div>
+      )}
+
+      {!isComment && community && (
+        <Link
+          href={`/communities/${community.id}`}
+          className="mt-5 flex items-center"
+        >
+          <p className="text-subtle-medium text-gray-1">
+            {formatDateString(createdAt)}
+            {community && ` - ${community.name} Community`}
+          </p>
+
+          <Image
+            src={community.image}
+            alt={community.name}
+            width={14}
+            height={14}
+            className="ml-1 rounded-full object-cover"
+          />
+        </Link>
+      )}
     </article>
   )
 }
