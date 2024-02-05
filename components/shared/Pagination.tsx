@@ -39,12 +39,12 @@ const Pagination = ({ pageNumber, isNext, path }: Props) => {
       >
         Prev
       </Button>
-      <p className="text-small-semibold text-light-1">{pageNumber}</p>
+      <p className="text-small-semibold text-dark-4">{pageNumber}</p>
 
       <Button
         onClick={() => handleNavigation("next")}
         disabled={!isNext}
-        className="!text-small-regular text-light-2"
+        className="!text-small-regular text-dark-4"
       >
         Next
       </Button>
